@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block title %}Take attendance{% endblock %}
+{% block content %}
+<section class="page-heading">
+    <div><p class="eyebrow">Daily attendance / {{ class_name }}</p><h1>Take attendance</h1><p class="subtitle">Choose a date, then mark every student present or absent.</p></div>
+</section>
+<section class="card">
+    <form class="toolbar no-print" method="get" action="{{ url_for('mark_attendance') }}">
+        <label for="load-date"><strong>Attendance date</strong></label>
+        <input id="load-date" type="date" name="date" value="{{ selected_date }}" required>
+        <button class="button secondary" type="submit">Load date</button>
+    </form>
+    {% if students %}
+    <form method="post" action="{{ url_for('mark_attendance') }}">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <input type="hidden" name="date" value="{{ selected_date }}">
+        <div class="attendance-list">
+            {% for student in students %}
+            <div class="attendance-row">
+                <div><div class="attendance-name">{{ student.name }}</div><span class="muted">Roll no. {{ student.roll_no }}</span></div>
+                <div class="radio-group">
+                    <label class="radio-option"><input type="radio" name="student_{{ student.id }}" value="Present" {% if saved_statuses.get(student.id) == 'Present' %}checked{% endif %} required><span class="badge present">Present</span></label>
+                    <label class="radio-option"><input type="radio" name="student_{{ student.id }}" value="Absent" {% if saved_statuses.get(student.id) == 'Absent' %}checked{% endif %}><span class="badge absent">Absent</span></label>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="attendance-actions">
+            <button class="button secondary" type="button" id="all-present">Mark all present</button>
+            <button class="button" type="submit">Save attendance</button>
+        </div>
+    </form>
+    {% else %}
+    <div class="empty-state">There are no students in {{ class_name }} yet. Add students before taking attendance.</div>
+    {% endif %}
+</section>
+{% endblock %}
+{% block scripts %}
+<script>
+const allPresentButton = document.getElementById("all-present");
+if (allPresentButton) {
+    allPresentButton.addEventListener("click", () => {
+        document.querySelectorAll('input[type="radio"][value="Present"]').forEach((radio) => {
+            radio.checked = true;
+        });
+    });
+}
+</script>
+{% endblock %}

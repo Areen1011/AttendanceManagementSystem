@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block title %}Attendance report{% endblock %}
+{% block content %}
+<section class="page-heading">
+    <div><p class="eyebrow">Insights</p><h1>Attendance report</h1><p class="subtitle">Review a daily attendance snapshot and export it for your records.</p></div>
+    <a class="button secondary no-print" href="{{ url_for('export_attendance_report', date=selected_date, class_name=class_name or '') }}">Download CSV</a>
+</section>
+<section class="card">
+    <form class="toolbar no-print" method="get" action="{{ url_for('attendance_report_page') }}">
+        <label for="report-date"><strong>Date</strong></label>
+        <input id="report-date" type="date" name="date" value="{{ selected_date }}" required>
+        {% if is_admin %}
+        <label for="report-class"><strong>Class</strong></label>
+        <select id="report-class" name="class_name">
+            <option value="">All classes</option>
+            {% for class_option in classes %}
+            <option value="{{ class_option }}" {% if class_name == class_option %}selected{% endif %}>{{ class_option }}</option>
+            {% endfor %}
+        </select>
+        {% endif %}
+        <button class="button" type="submit">Apply filters</button>
+        <button class="button secondary" type="button" onclick="window.print()">Print</button>
+    </form>
+    <div class="stats-grid" style="margin-top:18px">
+        <article class="stat-card" style="--tint:#e4f8f1"><div class="stat-label">Present</div><p class="stat-value">{{ present_count }}</p></article>
+        <article class="stat-card" style="--tint:#fff0f2"><div class="stat-label">Absent</div><p class="stat-value">{{ absent_count }}</p></article>
+        <article class="stat-card" style="--tint:#fff7df"><div class="stat-label">Not marked</div><p class="stat-value">{{ unmarked_count }}</p></article>
+        <article class="stat-card" style="--tint:#eeedff"><div class="stat-label">Students shown</div><p class="stat-value">{{ records|length }}</p></article>
+    </div>
+    <div class="page-heading" style="margin:8px 0 16px">
+        <div><h2 class="card-title">{{ class_name or 'All classes' }}</h2><p class="subtitle">{{ selected_date }}</p></div>
+    </div>
+    <div class="table-wrap">
+        <table>
+            <thead><tr><th>Roll no.</th><th>Student</th><th>Class</th><th>Status</th></tr></thead>
+            <tbody>
+            {% for record in records %}
+                <tr>
+                    <td>{{ record.roll_no }}</td><td><strong>{{ record.name }}</strong></td><td>{{ record.class }}</td>
+                    <td><span class="badge {% if record.status == 'Present' %}present{% elif record.status == 'Absent' %}absent{% else %}unmarked{% endif %}">{{ record.status }}</span></td>
+                </tr>
+            {% else %}
+                <tr><td colspan="4"><div class="empty-state">No students are available for this report.</div></td></tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+{% endblock %}

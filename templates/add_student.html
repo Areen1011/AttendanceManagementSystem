@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}Add student{% endblock %}
+{% block content %}
+<section class="page-heading">
+    <div><p class="eyebrow">Class roster</p><h1>Add a student</h1><p class="subtitle">The student will be added to {{ class_name }}.</p></div>
+</section>
+<section class="card page-narrow">
+    <form method="post">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <div class="field">
+            <label for="name">Student name</label>
+            <input id="name" type="text" name="name" maxlength="120" placeholder="Enter the student's full name" required autofocus>
+            <p class="field-hint">The next available roll number will be assigned automatically.</p>
+        </div>
+        <div class="button-row">
+            <button class="button" type="submit">Add student</button>
+            <a class="button secondary" href="{{ url_for('students') }}">Cancel</a>
+        </div>
+    </form>
+</section>
+{% endblock %}

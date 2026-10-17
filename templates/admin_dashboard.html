@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block title %}Admin overview{% endblock %}
+{% block content %}
+<section class="page-heading">
+    <div>
+        <p class="eyebrow">Administration</p>
+        <h1>Your school at a glance</h1>
+        <p class="subtitle">A live overview of your ClassPulse workspace.</p>
+    </div>
+    <span class="date-pill" style="color:var(--ink);border-color:var(--line);background:#fff">{{ current_date.strftime('%A, %B %d') }}</span>
+</section>
+<section class="stats-grid">
+    <article class="stat-card" style="--tint:#eeedff">
+        <div class="stat-label">Teaching staff</div>
+        <p class="stat-value">{{ total_teachers }}</p>
+        <p class="stat-note">Registered teacher accounts</p>
+    </article>
+    <article class="stat-card" style="--tint:#e4f8f1">
+        <div class="stat-label">Students</div>
+        <p class="stat-value">{{ total_students }}</p>
+        <p class="stat-note">Across all assigned classes</p>
+    </article>
+    <article class="stat-card" style="--tint:#fff2dc">
+        <div class="stat-label">Attendance entries today</div>
+        <p class="stat-value">{{ attendance_today }}</p>
+        <p class="stat-note">Marked for today's classes</p>
+    </article>
+    <article class="stat-card" style="--tint:#e8f2ff">
+        <div class="stat-label">Workspace</div>
+        <p class="stat-value" style="font-size:24px">Ready</p>
+        <p class="stat-note">Manage your school records</p>
+    </article>
+</section>
+<section class="card">
+    <p class="eyebrow">Quick actions</p>
+    <h2 class="card-title">Keep your school up to date</h2>
+    <p class="subtitle">Manage staff and view attendance activity from one place.</p>
+    <div class="actions">
+        <a class="button" href="{{ url_for('manage_teachers') }}">Manage teachers <span aria-hidden="true">→</span></a>
+        <a class="button secondary" href="{{ url_for('admin_students') }}">Browse students</a>
+        <a class="button secondary" href="{{ url_for('attendance_report_page') }}">Attendance reports</a>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% block title %}Students{% endblock %}
+{% block content %}
+<section class="page-heading">
+    <div>
+        <p class="eyebrow">Class roster</p>
+        <h1>Your students</h1>
+        <p class="subtitle">Manage the students assigned to {{ class_name }}.</p>
+    </div>
+    <a class="button" href="{{ url_for('add_student') }}">＋ Add student</a>
+</section>
+<section class="card">
+    <div class="toolbar no-print">
+        <input class="search-input" id="student-search" type="search" placeholder="Search by name or roll number" aria-label="Search students">
+        <button class="button secondary" type="button" onclick="window.print()">Print roster</button>
+    </div>
+    <div class="table-wrap">
+        <table id="student-table">
+            <thead><tr><th>Roll no.</th><th>Student</th><th>Class</th><th>Actions</th></tr></thead>
+            <tbody>
+            {% for student in students %}
+                <tr>
+                    <td>{{ student.roll_no }}</td>
+                    <td><strong>{{ student.name }}</strong></td>
+                    <td>{{ student.class }}</td>
+                    <td>
+                        <div class="table-actions">
+                            <a class="button secondary small" href="{{ url_for('view_student', id=student.id) }}">History</a>
+                            <a class="button secondary small" href="{{ url_for('edit_student', id=student.id) }}">Edit</a>
+                            <form class="inline-form" method="post" action="{{ url_for('delete_student', id=student.id) }}" onsubmit="return confirm('Delete this student and their attendance history?')">
+                                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                <button class="button danger small" type="submit">Delete</button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+            {% else %}
+                <tr><td colspan="4"><div class="empty-state">Your class roster is empty. Add your first student to get started.</div></td></tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+{% endblock %}
+{% block scripts %}
+<script>
+const studentSearch = document.getElementById("student-search");
+studentSearch.addEventListener("input", () => {
+    const query = studentSearch.value.trim().toLowerCase();
+    document.querySelectorAll("#student-table tbody tr").forEach((row) => {
+        row.hidden = !row.innerText.toLowerCase().includes(query);
+    });
+});
+</script>
+{% endblock %}

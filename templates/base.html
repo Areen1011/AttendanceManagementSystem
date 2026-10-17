@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#1d2340">
+    <title>{% block title %}Classroom{% endblock %} | ClassPulse</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/app.css') }}">
+    {% block head %}{% endblock %}
+</head>
+<body>
+    {% if not hide_navigation %}
+    <header class="topbar">
+        <a class="brand" href="{{ url_for('admin_dashboard') if session.get('admin_id') else url_for('teacher_dashboard') if session.get('teacher_id') else url_for('login') }}">
+            <span class="brand-mark">C</span>
+            <span>ClassPulse</span>
+        </a>
+        <nav class="nav-links" aria-label="Main navigation">
+            {% if session.get('admin_id') %}
+                <a href="{{ url_for('admin_dashboard') }}">Overview</a>
+                <a href="{{ url_for('manage_teachers') }}">Teachers</a>
+                <a href="{{ url_for('admin_students') }}">Students</a>
+                <a href="{{ url_for('attendance_report_page') }}">Reports</a>
+            {% elif session.get('teacher_id') %}
+                <a href="{{ url_for('teacher_dashboard') }}">Overview</a>
+                <a href="{{ url_for('students') }}">Students</a>
+                <a href="{{ url_for('mark_attendance') }}">Take attendance</a>
+                <a href="{{ url_for('attendance_report_page') }}">Reports</a>
+            {% endif %}
+            {% if session.get('admin_id') or session.get('teacher_id') %}
+            <form action="{{ url_for('logout') }}" method="post">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <button type="submit">Sign out</button>
+            </form>
+            {% endif %}
+        </nav>
+    </header>
+    {% endif %}
+    <main class="{% block main_class %}page{% endblock %}">
+        {% block notifications %}
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+            <div class="flash-list" role="status">
+                {% for category, message in messages %}
+                <div class="flash {{ category }}">{{ message }}</div>
+                {% endfor %}
+            </div>
+            {% endif %}
+        {% endwith %}
+        {% endblock %}
+        {% block content %}{% endblock %}
+    </main>
+    {% block scripts %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}Edit student{% endblock %}
+{% block content %}
+<section class="page-heading">
+    <div><p class="eyebrow">Class roster / student {{ student.roll_no }}</p><h1>Edit student</h1><p class="subtitle">Update the student's name in {{ student.class }}.</p></div>
+</section>
+<section class="card page-narrow">
+    <form method="post">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <div class="field"><label for="name">Student name</label><input id="name" type="text" name="name" value="{{ student.name }}" maxlength="120" required></div>
+        <div class="field"><label>Class</label><input type="text" value="{{ student.class }}" disabled><p class="field-hint">A student stays assigned to your class.</p></div>
+        <div class="button-row">
+            <button class="button" type="submit">Save changes</button>
+            <a class="button secondary" href="{{ url_for('students') }}">Cancel</a>
+        </div>
+    </form>
+</section>
+{% endblock %}

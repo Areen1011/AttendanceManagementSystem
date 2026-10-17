@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% set hide_navigation = true %}
+{% block title %}Sign in{% endblock %}
+{% block main_class %}login-page{% endblock %}
+{% block notifications %}{% endblock %}
+{% block content %}
+<section class="login-aside">
+    <a class="brand" href="{{ url_for('login') }}"><span class="brand-mark">C</span><span>ClassPulse</span></a>
+    <div class="login-pitch">
+        <p class="eyebrow" style="color:#aeadff">Attendance, made clear</p>
+        <h1>A better view of every school day.</h1>
+        <p>Keep class records organized, follow attendance trends, and give your team more time to focus on students.</p>
+    </div>
+    <div class="login-footer">A simple, secure classroom attendance workspace.</div>
+</section>
+<section class="login-main">
+    <div class="login-card">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+            <div class="flash-list" role="status">
+                {% for category, message in messages %}
+                <div class="flash {{ category }}">{{ message }}</div>
+                {% endfor %}
+            </div>
+            {% endif %}
+        {% endwith %}
+        <p class="eyebrow">Welcome back</p>
+        <h2>Sign in to ClassPulse</h2>
+        <p class="subtitle">Use your administrator or teacher account to continue.</p>
+        <form method="post" autocomplete="on">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <div class="field">
+                <label for="email">Email address</label>
+                <input id="email" type="email" name="email" autocomplete="username" placeholder="you@school.edu" required>
+            </div>
+            <div class="field">
+                <label for="password">Password</label>
+                <input id="password" type="password" name="password" autocomplete="current-password" placeholder="Enter your password" required>
+            </div>
+            <button class="button" type="submit">Sign in <span aria-hidden="true">→</span></button>
+        </form>
+        <p class="login-note">Need an account? Ask your school administrator.</p>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %}Edit teacher{% endblock %}
+{% block content %}
+<section class="page-heading">
+    <div><p class="eyebrow">Teaching staff</p><h1>Edit teacher</h1><p class="subtitle">Update {{ teacher.name }}'s details and class assignment.</p></div>
+</section>
+<section class="card page-narrow">
+    <form method="post">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <div class="field"><label for="name">Full name</label><input id="name" name="name" value="{{ teacher.name }}" maxlength="120" required></div>
+        <div class="field"><label for="email">Email address</label><input id="email" name="email" type="email" value="{{ teacher.email }}" maxlength="190" required></div>
+        <div class="field"><label for="class">Class</label><input id="class" name="class" value="{{ teacher.class }}" maxlength="80" required></div>
+        <div class="button-row">
+            <button class="button" type="submit">Save changes</button>
+            <a class="button secondary" href="{{ url_for('manage_teachers') }}">Cancel</a>
+        </div>
+    </form>
+</section>
+{% endblock %}

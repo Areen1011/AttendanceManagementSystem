@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block title %}Teacher overview{% endblock %}
+{% block content %}
+<section class="welcome-panel">
+    <div>
+        <p class="eyebrow" style="color:#b8b6ff">Teacher workspace</p>
+        <h1>Good day, {{ teacher_name }}</h1>
+        <p>Here is the latest attendance snapshot for {{ class_name }}.</p>
+    </div>
+    <span class="date-pill">{{ current_date.strftime('%A, %B %d') }}</span>
+</section>
+<section class="stats-grid">
+    <article class="stat-card" style="--tint:#eeedff">
+        <div class="stat-label">Students in class</div>
+        <p class="stat-value">{{ total_students }}</p>
+        <p class="stat-note">Your {{ class_name }} roster</p>
+    </article>
+    <article class="stat-card" style="--tint:#e4f8f1">
+        <div class="stat-label">Present today</div>
+        <p class="stat-value">{{ present_today }}</p>
+        <p class="stat-note">Marked present</p>
+    </article>
+    <article class="stat-card" style="--tint:#fff0f2">
+        <div class="stat-label">Absent today</div>
+        <p class="stat-value">{{ absent_today }}</p>
+        <p class="stat-note">Marked absent</p>
+    </article>
+    <article class="stat-card" style="--tint:#fff7df">
+        <div class="stat-label">Attendance rate</div>
+        <p class="stat-value">{{ ((present_today / total_students) * 100) | round(0) | int if total_students else 0 }}%</p>
+        <p class="stat-note">Of all enrolled students</p>
+    </article>
+</section>
+<section class="card">
+    <p class="eyebrow">Make today count</p>
+    <h2 class="card-title">What would you like to do?</h2>
+    <p class="subtitle">Take attendance, manage your roster, or review a student's history.</p>
+    <div class="actions">
+        <a class="button" href="{{ url_for('mark_attendance') }}">Take attendance <span aria-hidden="true">→</span></a>
+        <a class="button secondary" href="{{ url_for('students') }}">View class roster</a>
+        <a class="button secondary" href="{{ url_for('add_student') }}">Add a student</a>
+        <a class="button secondary" href="{{ url_for('attendance_report_page') }}">View reports</a>
+    </div>
+</section>
+{% endblock %}
